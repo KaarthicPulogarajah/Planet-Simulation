@@ -23,8 +23,11 @@ while 1 == 1
         sun = plot(0,0, 'ko');
         sun.MarkerSize = 2;
         
+        earthX(j+1) = 149.6.*cos(i);
+        earthY(j+1) = 149.6.*sin(i)+0.025;
+        
         %plot orbit of earth through parametric equations
-        earth = plot(149.6.*cos(i), 149.6.*sin(i)+0.025, 'bo');
+        earth = plot(earthX(j+1), earthY(j+1), 'bo');
         h = plot(cos(i), 2.*sin(i), 'ro');
         
         %plot details
@@ -32,7 +35,7 @@ while 1 == 1
         title(['Day ' num2str(j)]);
         legend('Sun' , 'Earth','Test');
         
-        %pause for 0.1s if intersect
+        %pause for 0.1s if planets intersect
          if (sin(i) == cos(i)) && (cos(i) == 2.*sin(i))
              pause(0.1);
              
@@ -53,6 +56,8 @@ while 1 == 1
     %pause and clear all points on graph
     pause(1);
     cla;
+    earthX
+    earthY
     
    
 end
