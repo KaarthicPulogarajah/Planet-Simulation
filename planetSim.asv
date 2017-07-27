@@ -14,9 +14,11 @@ y2 = xlsread('testGraph.xlsx', 'E1:E60');
 hold on;
 while 1 == 1
     %loop to plot each individual point on graphs
-    for i= 0:pi/16:2*pi
+    for j= 0:1:
         %p = plot(x1(i),y1(i), 'bo');
         %h = plot(x2(i),y2(i), 'ro');
+        
+        i = 2*pi/365*j;
         
         sun = plot(0,0, 'ko');
         sun.MarkerSize = 2;
@@ -24,15 +26,16 @@ while 1 == 1
         h = plot(cos(i), 2.*sin(i), 'ro');
         
         axis([-200 200 -200 200]);
-        title(['Day ' num2str(i)]);
-        legend
+        title(['Day ' num2str(j)]);
+        legend('Sun' , 'Earth','Test');
         
          if (sin(i) == cos(i)) && (cos(i) == 2.*sin(i))
              pause(0.1);
          else
-            pause(0.1);
+            pause(0.005);
             delete(earth);
             delete(h);
+            delete(sun);
         end
 
     end
