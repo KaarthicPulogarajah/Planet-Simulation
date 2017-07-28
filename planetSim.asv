@@ -23,10 +23,22 @@ while 1 == 1
         sun = plot(0,0, 'ko');
         sun.MarkerSize = 2;
         
-        earthx(j+1) = 149.6.*cos(i);
+        %generate x and y values for current position on elliptical orbit
+        earthX(j+1) = 149.6.*cos(i);
+        earthY(j+1) = 149.6.*sin(i);
+        
+        %apply rotation to ellipse to make orbit start on the +y axis,
+        %earth's orbit will be used as a benchmark for all other orbits
+        rot = rotation(earthX(j+1), earthY(j+1), 90);
+        
+        %update x and y values with the rotated values and apply vertical
+        %and horizontal translations of true orbit
+        earthX(j+1) = rot(1);
+        earthY(j+1) = rot(2)+0.025;
         
         %plot orbit of earth through parametric equations
-        earth = plot(earthx(j), 149.6.*sin(i)+0.025, 'bo');
+        earth = plot(earthX(j+1), earthY(j+1), 'bo');
+        %h is test orbit
         h = plot(cos(i), 2.*sin(i), 'ro');
         
         %plot details
@@ -56,5 +68,25 @@ while 1 == 1
     pause(1);
     cla;
     
+    %display all positions of earth
+    earthX;
+    earthY;
+    
    
+end
+end
+
+%'rotated' function will rotate a vector [x,y] counter-clockwise by a user
+%specified number of degrees
+
+%input current x and y positions and degrees to rotate
+function rotated = rotation(x,y,deg)
+    %convert degrees to radians
+    deg = deg*pi/180;
+    
+    %rotation matrix in the form 
+    rotMatrix = [cos(deg) -sin(deg); sin(deg) cos(deg)];
+    v = [x;y];
+    rotated = rotMatrix*v;
+    
 end
