@@ -1,0 +1,19 @@
+Notes:
+
+x(t) = (semi-major)*cos(i)
+y(t) = (semi-minor)*sin(i)
+
+x-axis is semi-major axis
+y-axis is semi-minor axis
+
+For each planet, need:
+- initial point assignments
+- rotation (if necessary)
+- plot
+- legend entry
+- delete planet point
+
+Links:
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/index.html
+https://i.stack.imgur.com/RXFrb.gif
+http://www.theplanetstoday.com/index.html
