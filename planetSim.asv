@@ -21,7 +21,7 @@ earthOrbitDays = data(3,7);
 mercuryMajor = data(1,1) / 1E6;
 mercuryMinor = data(1,3) / 1E6;
 mercuryDelta = data(1,6) /1E6;
-earthOrbitDays = data(13,7);
+mercuryOrbitDays = data(1,7);
 
 hold on;
 while 1 == 1
@@ -33,9 +33,9 @@ while 1 == 1
         aug08Earth = 313;
         
         %converts days to plottable orbit points of earth
-        i = 2*pi/365*j;
+        i = 2*pi/earthOrbitDays*j;
         %converts days to plottable orbit points of mercury
-        k = 2*pi/88*j;
+        k = 2*pi/mercuryOrbitDays*j;
         
         %plot stationary sun 
         sun = plot(0,0, 'ko');
@@ -48,7 +48,7 @@ while 1 == 1
         
         %apply rotation to ellipse to make orbit start on the +y axis,
         %earth's orbit will be used as a benchmark for all other orbits
-        rot = rotation(earthX(j+1), earthY(j+1), aug08Earth);
+        rot = rotation(earthX(j+1), earthY(j+1), 0);
         
         %update x and y values with the rotated values and apply vertical
         %and horizontal translations of true orbit
@@ -57,10 +57,10 @@ while 1 == 1
             %EARTH calcs
             
             %MERCURY calcs
-        mercuryX(j+1) = mercuryMajor.*cos(k);
-        mercuryY(j+1) = mercuryMinor.*sin(k);
+        mercuryX(j+1) = mercuryMinor.*sin(-k);
+        mercuryY(j+1) = mercuryMajor.*cos(k);
         
-        rot = rotation(mercuryX(j+1), mercuryY(j+1), aug08Mercury);
+        rot = rotation(mercuryX(j+1), mercuryY(j+1), -90);
         mercuryX(j+1) = rot(1)-mercuryDelta;
         mercuryY(j+1) = rot(2);
         
