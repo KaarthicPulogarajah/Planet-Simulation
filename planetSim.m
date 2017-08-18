@@ -1,8 +1,25 @@
-function planetSim(last, increment, axes) % enter number of days, increment of points plotted, and size of axes to run simulation
+function planetSim() % enter number of days, increment of points plotted, and size of axes to run simulation
+
+last = input('Enter number of days to run simulation: ');
+increment = input('Enter increment of days for each iteration: ');
+axes = input('Enter axis scale (enter 0 for default): ');
+planetName = input('Enter planet from which to calculate distances: ', 's');
+planetName = lower(planetName);
+if strcmp(planetName, 'mercury') planetNumber = 1;
+elseif strcmp(planetName, 'venus') planetNumber = 2;
+elseif strcmp(planetName, 'earth') planetNumber = 3;
+elseif strcmp(planetName, 'mars') planetNumber = 4;
+elseif strcmp(planetName, 'jupiter') planetNumber = 5;
+elseif strcmp(planetName, 'saturn') planetNumber = 6;
+elseif strcmp(planetName, 'uranus') planetNumber = 7;
+elseif strcmp(planetName, 'neptune') planetNumber = 8;
+elseif strcmp(planetName, 'pluto') planetNumber = 9;
+end
 
 if axes == 0
     axes = 250;
 end
+
 
 % import planets info from excel file
 data = xlsread('planets info.xlsx','B2:I10');
@@ -85,7 +102,7 @@ aug08Pluto = 280 * pi / 180 ;
 hold on;
 %figure('Name', 'Planet Simulation','NumberTitle','off');
 
-while 1 == 1
+%while 1 == 1
     
     %loop to plot each individual point on graphs
     for j= 0:increment:last
@@ -94,24 +111,25 @@ while 1 == 1
         sun = plot(0,0, 'ko');
         sun.MarkerSize = 2;
         
-        earth = plotPlanet(j, earthMajor, earthMinor, 0, earthOrbitDays, 0, earthDeltaX, aug08Earth, 'b', 'o');
-        mercury = plotPlanet(j, mercuryMajor, mercuryMinor, 0, mercuryOrbitDays, -mercuryDeltaX, 0, aug08Mercury, 'm', 'o');
-        venus = plotPlanet(j, venusMajor, venusMinor, 0, venusOrbitDays, 0, venusDeltaX, aug08Venus, 'r', 'o');
-        mars = plotPlanet(j, marsMajor, marsMinor, 90, marsOrbitDays, marsDeltaX, marsDeltaY, aug08Mars - 90*pi/180, 'c', 'o');
-        jupiter = plotPlanet(j, jupiterMajor, jupiterMinor, 0, jupiterOrbitDays, jupiterDeltaX, jupiterDeltaY, aug08Jupiter, 'g', 'o');
-        saturn = plotPlanet(j, saturnMajor, saturnMinor, 90, saturnOrbitDays, -saturnDeltaX, -saturnDeltaY, aug08Saturn - 90*pi/180, 'b', '*');
-        uranus = plotPlanet(j, uranusMajor, uranusMinor, 0, uranusOrbitDays, uranusDeltaX, uranusDeltaY, aug08Uranus, 'm', '*');
-        neptune = plotPlanet(j, neptuneMajor, neptuneMinor, 90, neptuneOrbitDays, -neptuneDeltaX, neptuneDeltaY, aug08Neptune - 90*pi/180, 'r', '*');
-        pluto = plotPlanet(j, plutoMajor, plutoMinor, 130, plutoOrbitDays, plutoDeltaX, -plutoDeltaY, aug08Pluto - 130*pi/180, 'c', '*');
+        [mercury, mercuryCoor] = plotPlanet(j, mercuryMajor, mercuryMinor, 0, mercuryOrbitDays, -mercuryDeltaX, 0, aug08Mercury, 'm', 'o');
+        [venus, venusCoor] = plotPlanet(j, venusMajor, venusMinor, 0, venusOrbitDays, 0, venusDeltaX, aug08Venus, 'r', 'o');
+        [earth, earthCoor] = plotPlanet(j, earthMajor, earthMinor, 0, earthOrbitDays, 0, earthDeltaX, aug08Earth, 'b', 'o');
+        [mars, marsCoor] = plotPlanet(j, marsMajor, marsMinor, 90, marsOrbitDays, marsDeltaX, marsDeltaY, aug08Mars - 90*pi/180, 'c', 'o');
+        [jupiter, jupiterCoor] = plotPlanet(j, jupiterMajor, jupiterMinor, 0, jupiterOrbitDays, jupiterDeltaX, jupiterDeltaY, aug08Jupiter, 'g', 'o');
+        [saturn, saturnCoor] = plotPlanet(j, saturnMajor, saturnMinor, 90, saturnOrbitDays, -saturnDeltaX, -saturnDeltaY, aug08Saturn - 90*pi/180, 'b', '*');
+        [uranus, uranusCoor] = plotPlanet(j, uranusMajor, uranusMinor, 0, uranusOrbitDays, uranusDeltaX, uranusDeltaY, aug08Uranus, 'm', '*');
+        [neptune, neptuneCoor] = plotPlanet(j, neptuneMajor, neptuneMinor, 90, neptuneOrbitDays, -neptuneDeltaX, neptuneDeltaY, aug08Neptune - 90*pi/180, 'r', '*');
+        [pluto, plutoCoor] = plotPlanet(j, plutoMajor, plutoMinor, 130, plutoOrbitDays, plutoDeltaX, -plutoDeltaY, aug08Pluto - 130*pi/180, 'c', '*');
         
-        
+        coordinates = [mercuryCoor venusCoor earthCoor marsCoor jupiterCoor saturnCoor uranusCoor neptuneCoor plutoCoor];
+                
         %plot details
         axis([-axes axes -axes axes]);
         title(['August 08 2017 Day ' num2str(j)]);
         xlabel('* 1E6 km');
         ylabel('* 1E6 km');
         set(get(gca,'ylabel'),'Rotation',0)
-        legend('Sun' , 'Earth', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto');
+        legend('Sun' , 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto');
         
 %         %pause for 0.1s if planets intersect
 %          if (sin(e) == cos(e)) && (cos(e) == 2.*sin(e))
@@ -119,8 +137,19 @@ while 1 == 1
              
          %pause at end of specified days before repeating
          if j == last
-             pause(5);
+            distPlanetToSunKM = dist(0, 0, coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToMercuryKM = dist(mercuryCoor(1), mercuryCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToVenusKM = dist(venusCoor(1), venusCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToEarthKM = dist(earthCoor(1), earthCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToMarsKM = dist(marsCoor(1), marsCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToJupiterKM = dist(jupiterCoor(1), jupiterCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToSaturnKM = dist(saturnCoor(1), saturnCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToUranusKM = dist(uranusCoor(1), uranusCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToNeptuneKM = dist(neptuneCoor(1), neptuneCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            distPlanetToPlutoKM = dist(plutoCoor(1), plutoCoor(2), coordinates(1, planetNumber), coordinates(2, planetNumber))
+            pause(50);
              
+         
          %delete previously plotted points
          else
             pause(0.005);
@@ -144,14 +173,14 @@ while 1 == 1
     
     
    
-end
+%end
 end
 
 %this function accepts all relevant values of a planet's orbit and
 %processes data to plot the next point of the orbit
 %this function replaces having to do everything multiple times in the main
 
-function planet = plotPlanet(j, majorAx, minorAx, rotDeg, orbitDays, deltaX, deltaY, offset, colour, marker)
+function [planet,location] = plotPlanet(j, majorAx, minorAx, rotDeg, orbitDays, deltaX, deltaY, offset, colour, marker)
 
     %converts number of orbit days to plottable orbit points
     t = 2*pi/orbitDays*j;
@@ -176,6 +205,8 @@ function planet = plotPlanet(j, majorAx, minorAx, rotDeg, orbitDays, deltaX, del
     planet.Marker = marker;
     planet.MarkerEdgeColor = colour;
     planet.LineStyle = 'none';
+    
+    location = [planetX ; planetY];
 end
 
 
@@ -197,5 +228,9 @@ function rotated = rotation(x,y,deg)
     %multiplying rotation matrix by vector will result in rotated points
     rotated = rotMatrix*v;
     
+end
+
+function distance = dist(x1,y1,x2,y2)
+    distance = sqrt((x1-x2).^2 + (y1-y2).^2) * 1E6;
 end
 
